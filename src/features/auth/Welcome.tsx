@@ -19,6 +19,12 @@ const Welcome = () => {
         </Link>
       </p>
       <p className="mt-1">
+        <Link className="flex gap-2" to="/dash/notes/new">
+          <ArrowBigRightDashIcon />
+          <span>Create New Note</span>
+        </Link>
+      </p>
+      <p className="mt-1">
         <Link className="flex gap-2" to="/dash/users">
           <ArrowBigRightDashIcon />
           <span>View User Settings</span>

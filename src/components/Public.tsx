@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
 import { LogIn } from "lucide-react"
+import { ModeToggle } from "./mode-toggle"
 
 const Public = () => {
   return (
     <section className="p-8 h-screen flex flex-col">
-      <header className="pb-4 border-b">
+      <header className="pb-4 border-b flex justify-between items-center">
         <h1 className="text-xl">Welcome to Dan D. Repairs!</h1>
+        <ModeToggle />
       </header>
       <main className="py-6">
         <p className="">

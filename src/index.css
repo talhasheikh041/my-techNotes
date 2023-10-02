@@ -76,13 +76,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-body {
-  font-family: "Nunito", sans-serif;
-  min-height: 100vh;
-  background-color: #0f172a;
-  background-image: url("./img/background.jpg");
-  background-size: cover;
-  background-position: top right;
-  background-blend-mode: multiply;
-}

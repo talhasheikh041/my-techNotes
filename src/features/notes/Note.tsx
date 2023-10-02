@@ -1,11 +1,8 @@
-import { Link } from "react-router-dom"
-import { PenSquare } from "lucide-react"
-
 import { useAppSelector } from "@/hooks/reduxHooks"
 import { selectNoteById } from "./notesApiSlice"
-import { buttonVariants } from "@/components/ui/button"
 import { EntityId } from "@reduxjs/toolkit"
 import { TableCell, TableRow } from "@/components/ui/table"
+import EditNote from "./EditNote"
 
 type NoteProps = {
   noteId: EntityId
@@ -46,15 +43,7 @@ const Note = ({ noteId }: NoteProps) => {
             {note.username}
           </TableCell>
           <TableCell className="text-center">
-            <Link
-              className={buttonVariants({ variant: "link" })}
-              to={`/dash/notes/${noteId}`}
-            >
-              <PenSquare
-                className="hover:scale-150 transition-all duration-150"
-                size="20px"
-              />
-            </Link>
+            <EditNote note={note} />
           </TableCell>
         </TableRow>
       </>

@@ -7,7 +7,7 @@ import {
   createSelector,
 } from "@reduxjs/toolkit"
 
-type NoteStateType = {
+export type NoteStateType = {
   _id: string
   user: string
   username: string
@@ -30,12 +30,13 @@ const initialState: EntityState<NoteStateType> = notesAdapter.getInitialState()
 export const notesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotes: builder.query<EntityState<NoteStateType>, void>({
-      query: () => "/notes",
-      // @ts-ignore
-      validateStatus: (response: Response, result) => {
-        return response.status === 200 && !result.isError
-      },
-      keepUnusedDataFor: 5,
+      query: () => ({
+        url: "/notes",
+        validateStatus: (response: Response, result) => {
+          return response.status === 200 && !result.isError
+        },
+      }),
+
       transformResponse: (responseData: NoteStateType[]) => {
         const loadedNotes = responseData.map((note) => {
           note.id = note._id
@@ -54,10 +55,58 @@ export const notesApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+
+    createNewNote: builder.mutation<
+      Record<string, any>,
+      Pick<NoteStateType, "user" | "title" | "text">
+    >({
+      query: (newNote) => ({
+        url: "/notes",
+        method: "POST",
+        body: {
+          ...newNote,
+        },
+      }),
+      invalidatesTags: [{ type: "Note", id: "LIST" }],
+    }),
+
+    updateNote: builder.mutation<Record<string, any>, Partial<NoteStateType>>({
+      query: (updateNote) => ({
+        url: "/notes",
+        method: "PATCH",
+        body: {
+          ...updateNote,
+        },
+      }),
+      invalidatesTags: (result, error, args) => {
+        return [{ type: "Note", id: args.id }]
+      },
+    }),
+
+    deleteNote: builder.mutation<
+      Record<string, any>,
+      Pick<NoteStateType, "id">
+    >({
+      query: ({ id }) => ({
+        url: "/notes",
+        method: "DELETE",
+        body: {
+          id,
+        },
+      }),
+      invalidatesTags: (result, error, args) => {
+        return [{ type: "Note", id: args.id }]
+      },
+    }),
   }),
 })
 
-export const { useGetNotesQuery } = notesApiSlice
+export const {
+  useGetNotesQuery,
+  useCreateNewNoteMutation,
+  useUpdateNoteMutation,
+  useDeleteNoteMutation,
+} = notesApiSlice
 
 const selectNotesResult = notesApiSlice.endpoints.getNotes.select()
 

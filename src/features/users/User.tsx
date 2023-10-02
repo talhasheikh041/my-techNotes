@@ -1,11 +1,9 @@
-import { Link } from "react-router-dom"
-import { PenSquare } from "lucide-react"
-
 import { useAppSelector } from "@/hooks/reduxHooks"
 import { selectUserById } from "./usersApiSlice"
-import { buttonVariants } from "@/components/ui/button"
 import { EntityId } from "@reduxjs/toolkit"
 import { TableCell, TableRow } from "@/components/ui/table"
+
+import EditUser from "./EditUser"
 
 type UserProps = {
   userId: EntityId
@@ -25,15 +23,7 @@ const User = ({ userId }: UserProps) => {
           </TableCell>
           <TableCell className="w-1/2 text-center">{userRolesString}</TableCell>
           <TableCell className="text-center">
-            <Link
-              className={buttonVariants({ variant: "link" })}
-              to={`/dash/users/${userId}`}
-            >
-              <PenSquare
-                className="hover:scale-150 transition-all duration-150"
-                size="20px"
-              />
-            </Link>
+            <EditUser user={user} />
           </TableCell>
         </TableRow>
       </>
