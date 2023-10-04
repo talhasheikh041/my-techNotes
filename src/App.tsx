@@ -15,6 +15,7 @@ import UsersList from "./features/users/UsersList"
 import NewUser from "./features/users/NewUser"
 import NewNote from "./features/notes/NewNote"
 import Prefetch from "./features/auth/Prefetch"
+import PersistLogin from "./features/auth/PersistLogin"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,18 +23,20 @@ const router = createBrowserRouter(
       <Route index element={<Public />} />
       <Route path="login" element={<Login />} />
 
-      <Route element={<Prefetch />}>
-        <Route path="dash" element={<DashLayout />}>
-          <Route index element={<Welcome />} />
+      <Route element={<PersistLogin />}>
+        <Route element={<Prefetch />}>
+          <Route path="dash" element={<DashLayout />}>
+            <Route index element={<Welcome />} />
 
-          <Route path="users">
-            <Route index element={<UsersList />} />
-            <Route path="new" element={<NewUser />} />
-          </Route>
+            <Route path="users">
+              <Route index element={<UsersList />} />
+              <Route path="new" element={<NewUser />} />
+            </Route>
 
-          <Route path="notes">
-            <Route index element={<NotesList />} />
-            <Route path="new" element={<NewNote />} />
+            <Route path="notes">
+              <Route index element={<NotesList />} />
+              <Route path="new" element={<NewNote />} />
+            </Route>
           </Route>
         </Route>
       </Route>

@@ -17,7 +17,11 @@ const NotesList = () => {
     isSuccess,
     isError,
     error,
-  } = useGetNotesQuery()
+  } = useGetNotesQuery(undefined, {
+    pollingInterval: 15000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+  })
 
   const customError = error as FetchBaseQueryError & {
     data: {

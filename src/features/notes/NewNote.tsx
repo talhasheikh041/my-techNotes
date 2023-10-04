@@ -23,7 +23,7 @@ const NewNote = () => {
   const navigate = useNavigate()
   const { toast } = useToast()
 
-  if (!users) return <p>Loading...</p>
+  if (!users.length) return <p>Not currently available</p>
 
   const [createNote, { isLoading, isSuccess, isError, error }] =
     useCreateNewNoteMutation()

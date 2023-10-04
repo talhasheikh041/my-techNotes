@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom"
-import { ArrowBigRightDashIcon } from "lucide-react"
+import { Pencil, User, View } from "lucide-react"
+import { buttonVariants } from "@/components/ui/button"
 
 const Welcome = () => {
   const date = new Date()
+
   const formattedDate = new Intl.DateTimeFormat("en-us", {
     dateStyle: "full",
     timeStyle: "long",
@@ -11,25 +13,50 @@ const Welcome = () => {
   return (
     <section className="mt-8">
       <p>{formattedDate}</p>
+
       <h1 className="text-4xl mt-6">Welcome</h1>
-      <p className="mt-8">
-        <Link className="flex gap-2" to="/dash/notes">
-          <ArrowBigRightDashIcon />
-          <span>View techNotes</span>
+
+      <div className="grid grid-cols-2 lg:w-1/2 lg:mx-auto mt-8 gap-3">
+        <Link
+          to="/dash/users/new"
+          className={`${buttonVariants({
+            variant: "outline",
+          })} flex flex-col h-28 gap-4`}
+        >
+          <User size="30" />
+          <p>Create New User</p>
         </Link>
-      </p>
-      <p className="mt-1">
-        <Link className="flex gap-2" to="/dash/notes/new">
-          <ArrowBigRightDashIcon />
-          <span>Create New Note</span>
+
+        <Link
+          to="/dash/users"
+          className={`${buttonVariants({
+            variant: "outline",
+          })} flex flex-col h-28 gap-4`}
+        >
+          <View size="30" />
+          <p>View Users List</p>
         </Link>
-      </p>
-      <p className="mt-1">
-        <Link className="flex gap-2" to="/dash/users">
-          <ArrowBigRightDashIcon />
-          <span>View User Settings</span>
+
+        <Link
+          to="/dash/notes/new"
+          className={`${buttonVariants({
+            variant: "outline",
+          })} flex flex-col h-28 gap-4`}
+        >
+          <Pencil size="30" />
+          <p>Create New Note</p>
         </Link>
-      </p>
+
+        <Link
+          to="/dash/notes"
+          className={`${buttonVariants({
+            variant: "outline",
+          })} flex flex-col h-28 gap-4`}
+        >
+          <View size="30" />
+          <p>View Notes List</p>
+        </Link>
+      </div>
     </section>
   )
 }

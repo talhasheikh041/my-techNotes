@@ -75,9 +75,6 @@ const EditUser = ({ user }: EditUserProps) => {
   useEffect(() => {
     console.log(isSuccess)
     if (isSuccess || isDelSuccess) {
-      setUsername("")
-      setPassword("")
-      setUserRoles([])
       setDialogOpen(false)
     }
   }, [isSuccess, isDelSuccess])
