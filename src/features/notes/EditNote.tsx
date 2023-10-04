@@ -33,6 +33,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { PenSquare } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
+import useAuth from "../../hooks/useAuth"
 
 type EditNoteProps = {
   note: NoteStateType
@@ -41,6 +42,8 @@ type EditNoteProps = {
 const EditNote = ({ note }: EditNoteProps) => {
   const users = useAppSelector((state) => selectAllUsers(state))
   const { toast } = useToast()
+
+  const { isManager, isAdmin } = useAuth()
 
   if (!users) return <p>Loading...</p>
 
@@ -141,6 +144,15 @@ const EditNote = ({ note }: EditNoteProps) => {
       })
   }
 
+  let deleteButton: JSX.Element | null = null
+  if (isManager || isAdmin) {
+    deleteButton = (
+      <Button type="button" variant="destructive" onClick={onDeleteNoteClicked}>
+        Delete note
+      </Button>
+    )
+  }
+
   const created = new Date(note.createdAt).toLocaleString("en-US", {
     day: "numeric",
     month: "long",
@@ -239,13 +251,7 @@ const EditNote = ({ note }: EditNoteProps) => {
             <Button type="submit" disabled={!canSave}>
               Save note
             </Button>
-            <Button
-              type="button"
-              variant="destructive"
-              onClick={onDeleteNoteClicked}
-            >
-              Delete note
-            </Button>
+            {deleteButton}
           </DialogFooter>
         </form>
       </DialogContent>

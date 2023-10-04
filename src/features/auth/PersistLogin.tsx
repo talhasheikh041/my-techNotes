@@ -5,6 +5,7 @@ import usePersist from "../../hooks/usePersist"
 import { useSelector } from "react-redux"
 import { selectCurrentToken } from "./authSlice"
 import { isErrorWithMessage, isFetchBaseQueryError } from "../../lib/utils"
+import Loading from "../../components/Loading"
 
 const PersistLogin = () => {
   const [persist] = usePersist()
@@ -50,7 +51,11 @@ const PersistLogin = () => {
   } else if (isLoading) {
     //persist: yes, token: no
     console.log("loading")
-    content = <p>Loading...</p>
+    content = (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    )
   } else if (isError) {
     //persist: yes, token: no
     console.log("error")

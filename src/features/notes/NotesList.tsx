@@ -9,6 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Note from "./Note"
+import useAuth from "../../hooks/useAuth"
+import { EntityId } from "@reduxjs/toolkit"
 
 const NotesList = () => {
   const {
@@ -22,6 +24,8 @@ const NotesList = () => {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   })
+
+  const { isAdmin, isManager, username } = useAuth()
 
   const customError = error as FetchBaseQueryError & {
     data: {
@@ -48,11 +52,20 @@ const NotesList = () => {
   }
 
   if (isSuccess) {
-    const { ids } = notes
+    const { ids, entities } = notes
 
-    const notesContent = ids.length
-      ? ids.map((noteId) => <Note key={noteId} noteId={noteId} />)
-      : null
+    let filteredIds: EntityId[]
+    if (isAdmin || isManager) {
+      filteredIds = [...ids]
+    } else {
+      filteredIds = ids.filter(
+        (noteId) => entities[noteId]?.username === username
+      )
+    }
+
+    const notesContent =
+      filteredIds.length &&
+      filteredIds.map((noteId) => <Note key={noteId} noteId={noteId} />)
 
     content = (
       <Table className="mt-8 lg:w-3/4 mx-auto">
