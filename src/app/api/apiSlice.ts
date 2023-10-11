@@ -17,7 +17,7 @@ const baseQuery: BaseQueryFn<
   {},
   FetchBaseQueryMeta
 > = fetchBaseQuery({
-  baseUrl: "http://localhost:3500",
+  baseUrl: "https://armidale-tasmanian-tiger-qkkc.2.ie-1.fl0.io",
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootStateType
