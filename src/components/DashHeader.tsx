@@ -134,7 +134,7 @@ const DashHeader = () => {
   )
 
   return (
-    <header className="pb-4 border-b flex justify-between items-center">
+    <header className="pb-4 border-b lg:flex lg:flex-row lg:justify-between lg:items-center flex flex-col items-center gap-6">
       <Link to="/dash">
         <h1 className="text-4xl lg:text-5xl font-bold">techNotes</h1>
       </Link>
