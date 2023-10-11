@@ -1,4 +1,3 @@
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query"
 import { useGetUsersQuery } from "./usersApiSlice"
 
 import {

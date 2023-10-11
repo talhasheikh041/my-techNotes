@@ -75,7 +75,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           ...updatedUser,
         },
       }),
-      invalidatesTags: (result, error, args) => {
+      invalidatesTags: (_, __, args) => {
         return [{ type: "User", id: args.id }]
       },
     }),
@@ -89,7 +89,7 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: "DELETE",
         body: { id },
       }),
-      invalidatesTags: (result, error, args) => [{ type: "User", id: args.id }],
+      invalidatesTags: (_, __, args) => [{ type: "User", id: args.id }],
     }),
   }),
 })
