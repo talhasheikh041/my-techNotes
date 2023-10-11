@@ -6,6 +6,7 @@ import {
   EntityAdapter,
   createSelector,
 } from "@reduxjs/toolkit"
+import { FetchArgs } from "@reduxjs/toolkit/query"
 
 export type UserStateType = {
   _id: string
@@ -22,14 +23,14 @@ const initialState: EntityState<UserStateType> = usersAdapter.getInitialState()
 
 export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getUsers: builder.query<EntityState<UserStateType>, void>({
+    getUsers: builder.query<EntityState<UserStateType>, FetchArgs | string>({
       query: () => ({
         url: "/users",
         validateStatus: (response: Response, result) => {
           return response.status === 200 && !result.isError
         },
       }),
-      keepUnusedDataFor: 100000,
+
       transformResponse: (responseData: UserStateType[]) => {
         const loadedUsers = responseData.map((user) => {
           user.id = user._id
@@ -100,7 +101,7 @@ export const {
   useDeleteUserMutation,
 } = usersApiSlice
 
-const selectUsersResult = usersApiSlice.endpoints.getUsers.select()
+const selectUsersResult = usersApiSlice.endpoints.getUsers.select("usersList")
 
 const selectUsersData = createSelector(
   selectUsersResult,

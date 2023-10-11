@@ -1,15 +1,19 @@
-import { useAppSelector } from "@/hooks/reduxHooks"
-import { selectNoteById } from "./notesApiSlice"
+import { useGetNotesQuery } from "./notesApiSlice"
 import { EntityId } from "@reduxjs/toolkit"
 import { TableCell, TableRow } from "@/components/ui/table"
 import EditNote from "./EditNote"
+import { memo } from "react"
 
 type NoteProps = {
   noteId: EntityId
 }
 
 const Note = ({ noteId }: NoteProps) => {
-  const note = useAppSelector((state) => selectNoteById(state, noteId))
+  const { note } = useGetNotesQuery("notesList", {
+    selectFromResult: ({ data }) => ({
+      note: data?.entities[noteId],
+    }),
+  })
 
   if (note) {
     const created = new Date(note.createdAt).toLocaleString("en-US", {
@@ -50,4 +54,7 @@ const Note = ({ noteId }: NoteProps) => {
     )
   } else return null
 }
-export default Note
+
+const memoizedNote = memo(Note)
+
+export default memoizedNote

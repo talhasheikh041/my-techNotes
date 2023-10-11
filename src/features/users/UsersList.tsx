@@ -9,42 +9,42 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import User from "./User"
+import useTitle from "../../hooks/useTitle"
+import { isErrorWithMessage, isFetchBaseQueryError } from "../../lib/utils"
+import Loading from "../../components/Loading"
 
 const UsersList = () => {
+  useTitle("Users List")
+
   const {
     data: users,
     isLoading,
     isSuccess,
     isError,
     error,
-  } = useGetUsersQuery(undefined, {
+  } = useGetUsersQuery("usersList", {
     pollingInterval: 60000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   })
 
-  const customError = error as FetchBaseQueryError & {
-    data: {
-      message: string
-    }
-  }
-
   let content: JSX.Element | null = null
 
-  if (isLoading) content = <p>Loading...</p>
+  if (isLoading)
+    content = (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    )
 
   if (isError) {
-    content = (
-      <p
-        className={
-          customError
-            ? "text-red-600 font-bold mb-4 text-center"
-            : "absolute left-[-9999px]"
-        }
-      >
-        {customError.data?.message}
-      </p>
-    )
+    if (isFetchBaseQueryError(error) && isErrorWithMessage(error.data)) {
+      content = (
+        <p className="text-red-600 font-bold mb-4 text-center">
+          {error.data?.message}
+        </p>
+      )
+    }
   }
 
   if (isSuccess) {

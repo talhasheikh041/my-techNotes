@@ -6,6 +6,7 @@ import {
   EntityAdapter,
   createSelector,
 } from "@reduxjs/toolkit"
+import { FetchArgs } from "@reduxjs/toolkit/query"
 
 export type NoteStateType = {
   _id: string
@@ -29,7 +30,7 @@ const initialState: EntityState<NoteStateType> = notesAdapter.getInitialState()
 
 export const notesApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getNotes: builder.query<EntityState<NoteStateType>, void>({
+    getNotes: builder.query<EntityState<NoteStateType>, FetchArgs | string>({
       query: () => ({
         url: "/notes",
         validateStatus: (response: Response, result) => {
@@ -108,7 +109,7 @@ export const {
   useDeleteNoteMutation,
 } = notesApiSlice
 
-const selectNotesResult = notesApiSlice.endpoints.getNotes.select()
+const selectNotesResult = notesApiSlice.endpoints.getNotes.select("notesList")
 
 const selectNotesData = createSelector(
   selectNotesResult,

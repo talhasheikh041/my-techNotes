@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { selectAllUsers } from "../users/usersApiSlice"
-import { useAppSelector } from "@/hooks/reduxHooks"
+import { UserStateType, useGetUsersQuery } from "../users/usersApiSlice"
 import { useCreateNewNoteMutation } from "./notesApiSlice"
 import { isErrorWithMessage, isFetchBaseQueryError } from "@/lib/utils"
 import { useToast } from "@/components/ui/use-toast"
@@ -17,13 +16,35 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import Loading from "../../components/Loading"
+import useTitle from "../../hooks/useTitle"
 
 const NewNote = () => {
-  const users = useAppSelector((state) => selectAllUsers(state))
+  useTitle("Add new note")
+
+  const { users } = useGetUsersQuery("usersList", {
+    selectFromResult: ({ data }) => {
+      if (data) {
+        return {
+          users: data.ids.map((id) => data.entities[id]) as UserStateType[],
+        }
+      } else {
+        return {
+          users: [],
+        }
+      }
+    },
+  })
+
   const navigate = useNavigate()
   const { toast } = useToast()
 
-  if (!users.length) return <p>Not currently available</p>
+  if (!users?.length)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    )
 
   const [createNote, { isLoading, isSuccess, isError, error }] =
     useCreateNewNoteMutation()

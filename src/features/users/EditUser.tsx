@@ -73,7 +73,6 @@ const EditUser = ({ user }: EditUserProps) => {
   }, [password])
 
   useEffect(() => {
-    console.log(isSuccess)
     if (isSuccess || isDelSuccess) {
       setDialogOpen(false)
     }
@@ -123,7 +122,6 @@ const EditUser = ({ user }: EditUserProps) => {
     const checkValue = Object.values(rolesBool).filter((role) => role).length
 
     if (checkValue === 1 && !checked) {
-      console.log("running")
       toast({
         title: "Not Allowed",
         description: "You have to select atleast one role for an employee.",

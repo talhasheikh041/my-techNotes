@@ -45,8 +45,6 @@ const baseQueryWithReauth: BaseQueryFn<
 
   // If you want, handle other status codes, too
   if (result.error?.status === 403) {
-    console.log("sending refresh token")
-
     // send refresh token to get new access token
     const refreshResult = await baseQuery("/auth/refresh", api, extraOptions)
 
@@ -69,7 +67,6 @@ const baseQueryWithReauth: BaseQueryFn<
 
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  keepUnusedDataFor: 100000,
   tagTypes: ["User", "Note"],
   endpoints: (_) => ({}),
 })

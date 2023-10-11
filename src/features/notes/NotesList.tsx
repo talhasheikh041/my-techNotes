@@ -11,44 +11,44 @@ import {
 import Note from "./Note"
 import useAuth from "../../hooks/useAuth"
 import { EntityId } from "@reduxjs/toolkit"
+import { isErrorWithMessage, isFetchBaseQueryError } from "../../lib/utils"
+import useTitle from "../../hooks/useTitle"
+import Loading from "../../components/Loading"
 
 const NotesList = () => {
+  useTitle("Notes List")
+
   const {
     data: notes,
     isLoading,
     isSuccess,
     isError,
     error,
-  } = useGetNotesQuery(undefined, {
-    pollingInterval: 15000,
+  } = useGetNotesQuery("notesList", {
+    pollingInterval: 120000,
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
   })
 
   const { isAdmin, isManager, username } = useAuth()
 
-  const customError = error as FetchBaseQueryError & {
-    data: {
-      message: string
-    }
-  }
-
   let content: JSX.Element | null = null
 
-  if (isLoading) content = <p>Loading...</p>
+  if (isLoading)
+    content = (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    )
 
   if (isError) {
-    content = (
-      <p
-        className={
-          customError
-            ? "text-red-600 font-bold mb-4 text-center"
-            : "absolute left-[-9999px]"
-        }
-      >
-        {customError.data?.message}
-      </p>
-    )
+    if (isFetchBaseQueryError(error) && isErrorWithMessage(error.data)) {
+      content = (
+        <p className="text-red-600 font-bold mb-4 text-center">
+          {error.data?.message}
+        </p>
+      )
+    }
   }
 
   if (isSuccess) {

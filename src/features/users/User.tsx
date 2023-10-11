@@ -1,7 +1,7 @@
-import { useAppSelector } from "@/hooks/reduxHooks"
-import { selectUserById } from "./usersApiSlice"
+import { useGetUsersQuery } from "./usersApiSlice"
 import { EntityId } from "@reduxjs/toolkit"
 import { TableCell, TableRow } from "@/components/ui/table"
+import { memo } from "react"
 
 import EditUser from "./EditUser"
 
@@ -10,7 +10,11 @@ type UserProps = {
 }
 
 const User = ({ userId }: UserProps) => {
-  const user = useAppSelector((state) => selectUserById(state, userId))
+  const { user } = useGetUsersQuery("usersList", {
+    selectFromResult: ({ data }) => ({
+      user: data?.entities[userId],
+    }),
+  })
 
   if (user) {
     const userRolesString = user.roles.toString().replace(",", ", ")
@@ -30,4 +34,7 @@ const User = ({ userId }: UserProps) => {
     )
   } else return null
 }
-export default User
+
+const memoizedUser = memo(User)
+
+export default memoizedUser

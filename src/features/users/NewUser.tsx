@@ -17,11 +17,14 @@ import {
 import { useToast } from "@/components/ui/use-toast"
 import { useNavigate } from "react-router-dom"
 import { isErrorWithMessage, isFetchBaseQueryError } from "@/lib/utils"
+import useTitle from "../../hooks/useTitle"
 
 const USER_REGEX = /^[A-z]{3,20}$/
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/
 
 const NewUser = () => {
+  useTitle("Add new User")
+
   const { toast } = useToast()
   const navigate = useNavigate()
 

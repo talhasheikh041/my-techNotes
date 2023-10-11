@@ -6,8 +6,7 @@ import {
 } from "./notesApiSlice"
 import { useToast } from "@/components/ui/use-toast"
 import { isErrorWithMessage, isFetchBaseQueryError } from "@/lib/utils"
-import { useAppSelector } from "@/hooks/reduxHooks"
-import { selectAllUsers } from "../users/usersApiSlice"
+import { UserStateType, useGetUsersQuery } from "../users/usersApiSlice"
 
 import {
   Dialog,
@@ -34,18 +33,44 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { PenSquare } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import useAuth from "../../hooks/useAuth"
+import Loading from "../../components/Loading"
 
 type EditNoteProps = {
   note: NoteStateType
 }
 
 const EditNote = ({ note }: EditNoteProps) => {
-  const users = useAppSelector((state) => selectAllUsers(state))
+  const { users } = useGetUsersQuery("usersList", {
+    selectFromResult: ({ data }) => {
+      if (data) {
+        return {
+          users: data.ids.map((id) => data.entities[id]) as UserStateType[],
+        }
+      } else {
+        return {
+          users: [],
+        }
+      }
+    },
+  })
+
   const { toast } = useToast()
 
-  const { isManager, isAdmin } = useAuth()
+  const { isManager, isAdmin, username } = useAuth()
 
-  if (!users) return <p>Loading...</p>
+  if (!users.length)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
+    )
+
+  // Some other employee could not delete or edit the other's employee note
+  if (!isManager && !isAdmin) {
+    if (note.username !== username) {
+      return <p>No Access</p>
+    }
+  }
 
   const [updateNote, { isLoading, isSuccess, isError, error }] =
     useUpdateNoteMutation()
@@ -63,9 +88,6 @@ const EditNote = ({ note }: EditNoteProps) => {
 
   useEffect(() => {
     if (isSuccess || isDelSuccess) {
-      setTitle("")
-      setText("")
-      setUserId("")
       setDialogOpen(false)
     }
   }, [isSuccess, isDelSuccess])
@@ -117,7 +139,6 @@ const EditNote = ({ note }: EditNoteProps) => {
   })
 
   const onSaveNoteClicked = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("note updated")
     e.preventDefault()
     if (canSave) {
       const result = await updateNote({
